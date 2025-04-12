@@ -78,8 +78,10 @@ fun AppNavigation() {
             DisasterSelectionScreen(
                 context = context,
                 onStartGame = { disaster, bunker ->
-                    if (disaster.isNotBlank() && bunker.isNotBlank()) {
-                        navController.navigate("gameScreen?disaster=${disaster.toEncodedUrl()}&bunker=${bunker.toEncodedUrl()}") {
+                    val encodedDisaster = disaster.replace(" ", "%20")
+                    val encodedBunker = bunker.replace(" ", "%20")
+                    if (encodedDisaster.isNotBlank() && encodedBunker.isNotBlank()) {
+                        navController.navigate("gameScreen?disaster=${encodedDisaster.toEncodedUrl()}&bunker=${encodedBunker.toEncodedUrl()}") {
                             popUpTo("mainScreen") { inclusive = true }
                         }
                     } else {
@@ -102,8 +104,8 @@ fun AppNavigation() {
                 }
             )
         ) { backStackEntry ->
-            val disaster = backStackEntry.arguments?.getString("disaster").orEmpty()
-            val bunker = backStackEntry.arguments?.getString("bunker").orEmpty()
+            val disaster = backStackEntry.arguments?.getString("disaster")?.replace("%20", " ").orEmpty()
+            val bunker = backStackEntry.arguments?.getString("bunker")?.replace("%20", " ").orEmpty()
 
             if (disaster.isNotBlank() && bunker.isNotBlank()) {
                 GameScreen(
