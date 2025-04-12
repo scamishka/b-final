@@ -1,5 +1,6 @@
 package com.example.b_end.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.CircleShape
@@ -17,25 +18,52 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.b_end.utils.Resources
 
 @Composable
 fun GameScreen(
     navController: NavController,
-    disaster: String = "Ядерная война",
-    bunker: String = "Бункер 2 (300 м²)",
-    roundText: String = "Раунд 1: Распределение профессий"
+    selectedDisaster: String,
+    selectedBunker: String,
+    context: Context = LocalContext.current
 ) {
-    var disasterExpanded by remember { mutableStateOf(false) }
-    var bunkerExpanded by remember { mutableStateOf(false) }
+    var disasterExpanded by remember { mutableStateOf(false) } // Добавляем состояние
+    var bunkerExpanded by remember { mutableStateOf(false) } // Добавляем состояние
+    // Получаем данные игроков
+    val professions = remember { Resources.getProfessions(context) }
+    val healthConditions = remember { Resources.getHealthConditions(context) }
+    val personalities = remember { Resources.getPersonalityTraits(context) }
+    val biology = remember { Resources.getBiology(context) }
+    val luggage = remember { Resources.getLuggage(context) }
+    val facts = remember { Resources.getFacts(context) }
 
-    val players = listOf(
-        Player("Алексей", true),
-        Player("Мария", true),
-        Player("Иван", false), // Изгнан
-        Player("Ольга", true)
-    )
+    // Создаем пустых игроков
+    var players by remember {
+        mutableStateOf(List(4) { index ->
+            Player(
+                name = "Игрок ${index + 1}",
+                isActive = true,
+                profession = "",
+                biology = "",
+                health = "",
+                personality = "",
+                luggage = "",
+                fact = ""
+            )
+        })
+    }
+
+    // Разбираем описание катастрофы и бункера
+    val disasterParts = selectedDisaster.split("\n")
+    val disasterTitle = disasterParts.firstOrNull() ?: ""
+    val disasterDescription = disasterParts.drop(1).joinToString("\n")
+
+    val bunkerParts = selectedBunker.split("\n")
+    val bunkerTitle = bunkerParts.firstOrNull() ?: ""
+    val bunkerDescription = bunkerParts.drop(1).joinToString("\n")
 
     Column(
         modifier = Modifier
@@ -44,8 +72,8 @@ fun GameScreen(
     ) {
         // Заголовок катастрофы
         ExpandableSection(
-            title = disaster,
-            content = "После выхода из бункера: радиоактивная пыль окутает планету, закрыв солнечный свет. Остаток населения - 5%",
+            title = disasterTitle,
+            content = disasterDescription,
             expanded = disasterExpanded,
             onExpandChange = { disasterExpanded = it }
         )
@@ -54,22 +82,13 @@ fun GameScreen(
 
         // Заголовок бункера
         ExpandableSection(
-            title = bunker,
-            content = "Площадь: 300 м²\nАвтономность: 90 дней\nОсобенности: медицинский кабинет, химическая лаборатория",
+            title = bunkerTitle,
+            content = bunkerDescription,
             expanded = bunkerExpanded,
             onExpandChange = { bunkerExpanded = it }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        // Текущий раунд
-        Text(
-            text = roundText,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         // Список игроков
         LazyColumn(
@@ -79,7 +98,9 @@ fun GameScreen(
             items(players) { player ->
                 PlayerItem(
                     player = player,
-                    onClick = { navController.navigate("playerDetail/${player.name}") }
+                    onClick = {
+                        navController.navigate("playerDetail/${player.name}")
+                    }
                 )
             }
         }
@@ -179,5 +200,11 @@ fun PlayerStatusIcon(isActive: Boolean) {
 
 data class Player(
     val name: String,
-    val isActive: Boolean
+    val isActive: Boolean,
+    val profession: String,
+    val biology: String,
+    val health: String,
+    val personality: String,
+    val luggage: String,
+    val fact: String
 )
