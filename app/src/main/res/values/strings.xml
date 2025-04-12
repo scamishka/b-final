@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">b-end</string>
+    <string name="title_activity_disaster_selection_screen">DisasterSelectionScreen</string>
+</resources>

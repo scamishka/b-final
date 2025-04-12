@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Ввод профессии -->
+        <Spinner
+            android:id="@+id/professionSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/professions_array" />
+
+        <!-- Ввод черт характера -->
+        <EditText
+            android:id="@+id/traitsInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Черты (через запятую: Лидер, Наркоман)"
+            android:inputType="text" />
+
+        <!-- Ввод здоровья -->
+        <EditText
+            android:id="@+id/healthInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Здоровье (-10..10)"
+            android:inputType="numberSigned" />
+
+        <!-- Ввод ресурсов -->
+        <EditText
+            android:id="@+id/resourcesInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ресурсы (0-100)"
+            android:inputType="number" />
+
+        <!-- Кнопка добавления игрока -->
+        <Button
+            android:id="@+id/addPlayerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Добавить игрока"
+            android:layout_marginTop="8dp" />
+
+        <!-- Кнопка анализа -->
+        <Button
+            android:id="@+id/analyzeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Анализировать группу"
+            android:layout_marginTop="8dp" />
+
+        <!-- Вывод результата -->
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:gravity="center" />
+    </LinearLayout>
+</ScrollView>
