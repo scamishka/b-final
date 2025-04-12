@@ -14,6 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.b_end.ui.screens.DisasterSelectionScreen
+import com.example.b_end.ui.screens.GameScreen
+import com.example.b_end.ui.screens.PlayerDetailScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +53,19 @@ fun AppNavigation() {
         // Экран выбора катастрофы
         composable("disasterSelection") {
             DisasterSelectionScreen(navController = navController)
+        }
+
+        composable("gameScreen") {
+            GameScreen(
+                navController = navController,
+                disaster = "Ядерная война", // Передавайте реальные данные
+                bunker = "Бункер 2" // Из предыдущего экрана
+            )
+        }
+        composable("playerDetail/{name}") { backStackEntry ->
+            PlayerDetailScreen(
+                name = backStackEntry.arguments?.getString("name") ?: ""
+            )
         }
     }
 }

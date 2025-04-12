@@ -62,7 +62,12 @@ fun DisasterSelectionScreen(
 
         // Кнопка продолжения
         Button(
-            onClick = { navController.navigate("playerSetup") },
+            onClick = {
+                navController.navigate("gameScreen") {
+                    // Очищаем стек навигации до главного экрана
+                    popUpTo("mainScreen") { inclusive = true }
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             enabled = selectedDisaster.isNotEmpty() && selectedBunker.isNotEmpty(),
             shape = MaterialTheme.shapes.medium
