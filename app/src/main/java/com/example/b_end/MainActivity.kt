@@ -26,6 +26,7 @@ import com.example.b_end.ui.screens.GameScreen
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.b_end.ui.screens.PlayerDetailScreen
 import java.net.URLEncoder
 import java.net.URLDecoder
 
@@ -44,6 +45,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+fun String.encodeForUrl(): String =
+    URLEncoder.encode(this, "UTF-8")
+
+fun String.decodeFromUrl(): String =
+    URLDecoder.decode(this, "UTF-8")
 
 @Composable
 fun AppNavigation() {
@@ -120,6 +127,37 @@ fun AppNavigation() {
                     showError = true
                 }
             }
+        }
+
+        composable(
+            "playerDetail/{name}?profession={profession}&biology={biology}&health={health}" +
+                    "&personality={personality}&luggage={luggage}&fact={fact}&isActive={isActive}",
+            arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("profession") { type = NavType.StringType },
+                navArgument("biology") { type = NavType.StringType },
+                navArgument("health") { type = NavType.StringType },
+                navArgument("personality") { type = NavType.StringType },
+                navArgument("luggage") { type = NavType.StringType },
+                navArgument("fact") { type = NavType.StringType },
+                navArgument("isActive") { type = NavType.BoolType }
+            )
+        ) { backStackEntry ->
+            fun decodeParam(value: String?): String {
+                return URLDecoder.decode(value ?: "", "UTF-8")
+            }
+
+            PlayerDetailScreen(
+                navController = navController,
+                playerName = decodeParam(backStackEntry.arguments?.getString("name")),
+                profession = decodeParam(backStackEntry.arguments?.getString("profession")),
+                biology = decodeParam(backStackEntry.arguments?.getString("biology")),
+                health = decodeParam(backStackEntry.arguments?.getString("health")),
+                personality = decodeParam(backStackEntry.arguments?.getString("personality")),
+                luggage = decodeParam(backStackEntry.arguments?.getString("luggage")),
+                fact = decodeParam(backStackEntry.arguments?.getString("fact")),
+                isActive = backStackEntry.arguments?.getBoolean("isActive") ?: true
+            )
         }
     }
 }
