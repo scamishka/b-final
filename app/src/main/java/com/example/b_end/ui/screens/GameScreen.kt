@@ -21,7 +21,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.b_end.encodeForUrl
 import com.example.b_end.utils.Resources
+import java.net.URLEncoder
 
 @Composable
 fun GameScreen(
@@ -90,6 +92,13 @@ fun GameScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Добавленный заголовок перед списком игроков
+        Text(
+            text = "Раунд 1 - профессия",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
         // Список игроков
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -99,7 +108,20 @@ fun GameScreen(
                 PlayerItem(
                     player = player,
                     onClick = {
-                        navController.navigate("playerDetail/${player.name}")
+                        fun encodeParam(value: String): String {
+                            return URLEncoder.encode(value, "UTF-8")
+                        }
+
+                        navController.navigate(
+                            "playerDetail/${encodeParam(player.name)}" +
+                                    "?profession=${encodeParam(player.profession)}" +
+                                    "&biology=${encodeParam(player.biology)}" +
+                                    "&health=${encodeParam(player.health)}" +
+                                    "&personality=${encodeParam(player.personality)}" +
+                                    "&luggage=${encodeParam(player.luggage)}" +
+                                    "&fact=${encodeParam(player.fact)}" +
+                                    "&isActive=${player.isActive}"  // Boolean передаем без кодирования
+                        )
                     }
                 )
             }
